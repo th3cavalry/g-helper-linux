@@ -6,6 +6,22 @@
 
 Small and lightweight Armoury Crate alternative for Asus laptops offering almost same functionality with a much smaller footprint. Works with all popular models, such as ROG Zephyrus G14, G15, G16, M16, Flow X13, Flow X16, Flow Z13, DUO, TUF Series, Strix or Scar Series, ProArt, Vivobook, Zenbook, Expertbook, ROG Ally or Ally X and many more! 
 
+## 🐧 Linux Port Available!
+
+We now have a **Linux port** that integrates with asus-linux tools! For Linux users, check out the [`linux-app`](./linux-app/) directory for a command-line version that works with `asusctl` and `supergfxctl`.
+
+**Linux Features:**
+- Performance mode control (Quiet/Balanced/Performance)
+- GPU switching (Integrated/Hybrid/Vfio) via supergfxctl
+- Battery charge limiting
+- Keyboard brightness control
+- Console interface with interactive mode
+
+**Linux Requirements:** asus-linux tools (`asusctl`, `supergfxctl`)  
+**Installation:** See [Linux README](./linux-app/README.md) for details
+
+--- 
+
 # [:floppy_disk: Download](https://github.com/seerge/g-helper/releases/latest/download/GHelper.zip)
 **⭐ If you like the app - please spread the word about it online**
 

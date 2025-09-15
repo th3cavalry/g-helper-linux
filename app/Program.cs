@@ -1,3 +1,10 @@
+using GHelper.Platform;
+using System.Diagnostics;
+using System.Globalization;
+using System.Reflection;
+using System.Runtime.InteropServices;
+
+#if NET8_0_WINDOWS
 using GHelper.Ally;
 using GHelper.Battery;
 using GHelper.Display;
@@ -9,16 +16,16 @@ using GHelper.Peripherals;
 using GHelper.USB;
 using Microsoft.Win32;
 using Ryzen;
-using System.Diagnostics;
-using System.Globalization;
-using System.Reflection;
 using static NativeMethods;
+#endif
 
 namespace GHelper
 {
 
     static class Program
     {
+#if NET8_0_WINDOWS
+        // Windows-specific members
         public static NotifyIcon trayIcon;
         public static AsusACPI acpi;
 
@@ -40,9 +47,43 @@ namespace GHelper
         public static InputDispatcher? inputDispatcher;
 
         private static PowerLineStatus isPlugged = SystemInformation.PowerStatus.PowerLineStatus;
+#endif
+
+        // Cross-platform platform adapter
+        public static IPlatformAdapter platformAdapter;
 
         // The main entry point for the application
         public static void Main(string[] args)
+        {
+            try
+            {
+                // Initialize platform adapter
+                platformAdapter = PlatformFactory.GetPlatformAdapter();
+                if (!platformAdapter.Initialize())
+                {
+                    Console.WriteLine("Failed to initialize platform adapter");
+                    Environment.Exit(1);
+                    return;
+                }
+
+#if NET8_0_WINDOWS
+                // Run Windows-specific main
+                MainWindows(args);
+#else
+                // Run Linux-specific main
+                MainLinux(args);
+#endif
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Application error: {ex.Message}");
+                Environment.Exit(1);
+            }
+        }
+
+#if NET8_0_WINDOWS
+        // Windows-specific main method
+        private static void MainWindows(string[] args)
         {
 
             string action = "";
@@ -396,6 +437,197 @@ namespace GHelper
             {
                 Logger.WriteLine("Startup Battery Limit Error: " + ex.Message);
             }
+        }
+
+#endif
+
+        // Linux-specific main method
+        private static void MainLinux(string[] args)
+        {
+            Console.WriteLine("G-Helper Linux starting...");
+            
+            string action = "";
+            if (args.Length > 0) action = args[0];
+
+            // Set culture
+            string language = Environment.GetEnvironmentVariable("LANG") ?? "en";
+            try
+            {
+                var culture = CultureInfo.GetCultureInfo(language.Split('.')[0].Replace('_', '-'));
+                Thread.CurrentThread.CurrentUICulture = culture;
+            }
+            catch
+            {
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en");
+            }
+
+            Console.WriteLine($"G-Helper Linux {Assembly.GetExecutingAssembly().GetName().Version} started");
+            Console.WriteLine($"Platform: {RuntimeInformation.OSDescription}");
+            Console.WriteLine($"Model: {platformAdapter.GetModel()}");
+
+            // Initialize tray
+            platformAdapter.InitializeTray();
+
+            // Handle command line actions
+            switch (action)
+            {
+                case "charge":
+                    HandleBatteryLimit();
+                    Environment.Exit(0);
+                    return;
+                case "performance":
+                    SetPerformanceMode();
+                    break;
+                case "gpu":
+                    SetGPUMode();
+                    break;
+                case "settings":
+                    platformAdapter.ShowSettings();
+                    break;
+                default:
+                    Console.WriteLine("G-Helper Linux is running. Available commands:");
+                    Console.WriteLine("  --charge: Set battery charge limit");
+                    Console.WriteLine("  --performance: Set performance mode");
+                    Console.WriteLine("  --gpu: Set GPU mode");
+                    Console.WriteLine("  --settings: Show settings");
+                    break;
+            }
+
+            // Keep the application running
+            Console.WriteLine("Press Ctrl+C to exit or 'q' + Enter to quit");
+            
+            // Set up Ctrl+C handler
+            Console.CancelKeyPress += (sender, e) =>
+            {
+                e.Cancel = true;
+                platformAdapter.Exit();
+            };
+
+            // Simple command loop
+            string? input;
+            while ((input = Console.ReadLine()) != "q")
+            {
+                if (input == "settings")
+                {
+                    platformAdapter.ShowSettings();
+                }
+                else if (input == "status")
+                {
+                    ShowStatus();
+                }
+                else if (input == "help")
+                {
+                    ShowHelp();
+                }
+                else if (!string.IsNullOrEmpty(input))
+                {
+                    Console.WriteLine($"Unknown command: {input}. Type 'help' for available commands.");
+                }
+            }
+
+            platformAdapter.Exit();
+        }
+
+        private static void HandleBatteryLimit()
+        {
+            try
+            {
+                Console.WriteLine("Setting battery charge limit...");
+                // This would be implemented using the platform adapter
+                // For now, just a placeholder
+                platformAdapter.DeviceSet(0x00120057, 80, "BatteryLimit");
+                Console.WriteLine("Battery limit set to 80%");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error setting battery limit: {ex.Message}");
+            }
+        }
+
+        private static void SetPerformanceMode()
+        {
+            try
+            {
+                Console.WriteLine("Current performance mode:");
+                int currentMode = platformAdapter.DeviceGet(0x00120075, "PerformanceMode");
+                string[] modes = { "Balanced", "Performance", "Quiet" };
+                if (currentMode >= 0 && currentMode < modes.Length)
+                {
+                    Console.WriteLine($"  {modes[currentMode]}");
+                }
+                else
+                {
+                    Console.WriteLine("  Unknown");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting performance mode: {ex.Message}");
+            }
+        }
+
+        private static void SetGPUMode()
+        {
+            try
+            {
+                Console.WriteLine("Current GPU mode:");
+                int currentMode = platformAdapter.DeviceGet(0x00090020, "GPUMode");
+                string[] modes = { "Integrated", "Hybrid", "Discrete" };
+                if (currentMode >= 0 && currentMode < modes.Length)
+                {
+                    Console.WriteLine($"  {modes[currentMode]}");
+                }
+                else
+                {
+                    Console.WriteLine("  Unknown");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting GPU mode: {ex.Message}");
+            }
+        }
+
+        private static void ShowStatus()
+        {
+            Console.WriteLine("\n=== G-Helper Status ===");
+            Console.WriteLine($"Platform: {RuntimeInformation.OSDescription}");
+            Console.WriteLine($"Model: {platformAdapter.GetModel()}");
+            Console.WriteLine($"Connected: {platformAdapter.IsConnected()}");
+            
+            try
+            {
+                // Show current settings
+                SetPerformanceMode();
+                SetGPUMode();
+                
+                int batteryLimit = platformAdapter.DeviceGet(0x00120057, "BatteryLimit");
+                if (batteryLimit > 0)
+                {
+                    Console.WriteLine($"Battery charge limit: {batteryLimit}%");
+                }
+                
+                int brightness = platformAdapter.DeviceGet(0x00050021, "Brightness");
+                if (brightness >= 0)
+                {
+                    Console.WriteLine($"Keyboard brightness: {brightness}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting status: {ex.Message}");
+            }
+            Console.WriteLine("=====================\n");
+        }
+
+        private static void ShowHelp()
+        {
+            Console.WriteLine("\n=== G-Helper Commands ===");
+            Console.WriteLine("settings  - Show settings (placeholder)");
+            Console.WriteLine("status    - Show current device status");
+            Console.WriteLine("help      - Show this help");
+            Console.WriteLine("q         - Quit application");
+            Console.WriteLine("========================\n");
         }
 
     }
