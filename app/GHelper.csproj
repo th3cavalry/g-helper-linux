@@ -70,6 +70,7 @@
     <Compile Remove="Updates.Designer.cs" />
     <Compile Remove="Properties\Resources.Designer.cs" />
     <Compile Remove="Properties\Settings.Designer.cs" />
+    <Compile Remove="Properties\Strings.Designer.cs" />
     <Compile Remove="UI\**" />
     <Compile Remove="Ally\**" />
     <Compile Remove="AnimeMatrix\**" />
@@ -95,6 +96,7 @@
     <EmbeddedResource Remove="Updates.resx" />
     <EmbeddedResource Remove="Properties\Resources.resx" />
     <EmbeddedResource Remove="Properties\Strings.*.resx" />
+    <EmbeddedResource Remove="Properties\Strings.resx" />
     <EmbeddedResource Remove="UI\**" />
   </ItemGroup>
 

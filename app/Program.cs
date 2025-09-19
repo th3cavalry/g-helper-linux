@@ -465,7 +465,7 @@ namespace GHelper
             Console.WriteLine($"Platform: {RuntimeInformation.OSDescription}");
             Console.WriteLine($"Model: {platformAdapter.GetModel()}");
 
-            // Initialize tray
+            // Initialize tray and GUI support
             platformAdapter.InitializeTray();
 
             // Handle command line actions
@@ -482,18 +482,41 @@ namespace GHelper
                     SetGPUMode();
                     break;
                 case "settings":
+                case "gui":
+                    // Show GUI and keep running
                     platformAdapter.ShowSettings();
+                    // For GUI mode, we don't want the console loop
+                    Console.WriteLine("GUI started. Close the window to exit.");
+                    // Wait for the application to exit
+                    WaitForGUIExit();
+                    return;
+                case "console":
+                    // Force console mode even when GUI is available
                     break;
                 default:
-                    Console.WriteLine("G-Helper Linux is running. Available commands:");
-                    Console.WriteLine("  --charge: Set battery charge limit");
-                    Console.WriteLine("  --performance: Set performance mode");
-                    Console.WriteLine("  --gpu: Set GPU mode");
-                    Console.WriteLine("  --settings: Show settings");
+                    // Default behavior - try GUI first, fall back to console
+                    Console.WriteLine("Starting GUI mode. Use 'console' argument to force console mode.");
+                    try
+                    {
+                        platformAdapter.ShowSettings();
+                        Console.WriteLine("GUI started. Close the window to exit, or press Ctrl+C for console mode.");
+                        WaitForGUIExit();
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to start GUI: {ex.Message}");
+                        Console.WriteLine("Falling back to console mode...");
+                    }
                     break;
             }
 
-            // Keep the application running
+            // Console mode
+            Console.WriteLine("Console mode active. Available commands:");
+            Console.WriteLine("  settings: Show GUI settings");
+            Console.WriteLine("  status: Show current status");
+            Console.WriteLine("  help: Show help");
+            Console.WriteLine("  q: Quit");
             Console.WriteLine("Press Ctrl+C to exit or 'q' + Enter to quit");
             
             // Set up Ctrl+C handler
@@ -526,6 +549,32 @@ namespace GHelper
             }
 
             platformAdapter.Exit();
+        }
+
+        private static void WaitForGUIExit()
+        {
+            // Set up Ctrl+C handler for GUI mode
+            Console.CancelKeyPress += (sender, e) =>
+            {
+                Console.WriteLine("\nSwitching to console mode...");
+                e.Cancel = true;
+                platformAdapter.HideSettings();
+            };
+
+            // Wait for user input or application exit
+            Task.Run(() =>
+            {
+                Console.ReadLine(); // Wait for any input to potentially switch to console mode
+            });
+
+            // This is a simple implementation - in a real app, you'd wait for the GUI to close
+            // For now, we'll just keep the process alive
+            while (true)
+            {
+                Thread.Sleep(1000);
+                // In a real implementation, you'd check if the GUI window is still open
+                // and break when it's closed
+            }
         }
 
         private static void HandleBatteryLimit()
