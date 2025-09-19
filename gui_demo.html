@@ -1,0 +1,111 @@
+<html>
+<head>
+    <title>G-Helper Linux GUI Demo</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; margin: 0; padding: 20px; }
+        .demo-container { max-width: 800px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: #2E3440; color: white; padding: 20px; display: flex; align-items: center; }
+        .header .icon { font-size: 32px; margin-right: 15px; }
+        .header .title { font-size: 24px; font-weight: bold; }
+        .header .subtitle { font-size: 14px; color: #88C999; margin-top: 5px; }
+        .tabs { display: flex; background: #f8f9fa; border-bottom: 1px solid #e5e7eb; }
+        .tab { padding: 15px 25px; cursor: pointer; border-bottom: 3px solid transparent; font-weight: 500; }
+        .tab.active { background: white; border-bottom-color: #0078d4; color: #0078d4; }
+        .tab-content { padding: 30px; }
+        .section { border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .section h3 { margin: 0 0 10px 0; font-size: 18px; color: #1f2937; }
+        .section p { margin: 0 0 15px 0; color: #6b7280; font-size: 14px; }
+        .control { display: flex; align-items: center; gap: 15px; margin: 15px 0; }
+        .dropdown, .slider { padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
+        .dropdown { min-width: 150px; }
+        .slider { flex: 1; max-width: 300px; }
+        .button { background: #0078d4; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .status-grid { display: grid; grid-template-columns: auto 1fr; gap: 10px 20px; align-items: center; }
+        .status-label { font-weight: bold; color: #374151; }
+        .status-value { color: #6b7280; }
+        .footer { background: #f3f4f6; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #6b7280; }
+        .demo-text { background: #1a1a1a; color: #00ff00; padding: 20px; border-radius: 8px; font-family: monospace; font-size: 12px; line-height: 1.4; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="header">
+            <div class="icon">🎮</div>
+            <div>
+                <div class="title">G-Helper for Linux</div>
+                <div class="subtitle">ASUS ROG Zephyrus G14</div>
+            </div>
+        </div>
+        <div class="tabs">
+            <div class="tab active">⚡ Performance</div>
+            <div class="tab">🔋 Battery</div>
+            <div class="tab">⌨️ Keyboard</div>
+            <div class="tab">ℹ️ Status</div>
+        </div>
+        <div class="tab-content">
+            <div class="section">
+                <h3>Performance Mode</h3>
+                <p>Control CPU and fan performance</p>
+                <div class="control">
+                    <select class="dropdown">
+                        <option>Quiet</option>
+                        <option selected>Balanced</option>
+                        <option>Performance</option>
+                    </select>
+                </div>
+            </div>
+            <div class="section">
+                <h3>GPU Mode</h3>
+                <p>Switch between integrated and discrete GPU</p>
+                <div class="control">
+                    <select class="dropdown">
+                        <option>Integrated</option>
+                        <option selected>Hybrid</option>
+                        <option>Vfio</option>
+                    </select>
+                </div>
+                <p style="color: #f59e0b; font-size: 12px;">Note: GPU mode changes require a reboot to take effect</p>
+            </div>
+            <div class="section">
+                <h3>Battery Charge Limit</h3>
+                <p>Limit maximum charge to preserve battery health</p>
+                <div class="control">
+                    <input type="range" class="slider" min="20" max="100" value="80">
+                    <span style="font-weight: bold;">80%</span>
+                </div>
+                <button class="button">Apply Limit</button>
+            </div>
+            <div class="section">
+                <h3>System Information</h3>
+                <div class="status-grid">
+                    <span class="status-label">Model:</span>
+                    <span class="status-value">ASUS ROG Zephyrus G14 (Mock)</span>
+                    <span class="status-label">Performance:</span>
+                    <span class="status-value">Balanced</span>
+                    <span class="status-label">GPU Mode:</span>
+                    <span class="status-value">Hybrid</span>
+                    <span class="status-label">Battery Limit:</span>
+                    <span class="status-value">80%</span>
+                </div>
+                <button class="button" style="margin-top: 15px;">🔄 Refresh Status</button>
+            </div>
+        </div>
+        <div class="footer">
+            <span>G-Helper Linux v0.230 | Using asus-linux tools</span>
+            <button class="button" style="background: #6b7280;">Quit</button>
+        </div>
+    </div>
+    <div style="max-width: 800px; margin: 20px auto;">
+        <h2 style="color: #1f2937;">Demo Output</h2>
+        <div class="demo-text">✅ GUI Features Implemented:
+  ✓ Modern Avalonia UI with Fluent theme
+  ✓ Tabbed interface (Performance, Battery, Keyboard, Status)  
+  ✓ Performance Mode dropdown (Quiet, Balanced, Performance)
+  ✓ GPU Mode dropdown (Integrated, Hybrid, Vfio)
+  ✓ Battery charge limit slider (20-100%)
+  ✓ Keyboard brightness slider (0-3 levels)
+  ✓ Real-time system status display
+  ✓ Cross-platform .NET 8 implementation</div>
+    </div>
+</body>
+</html>
