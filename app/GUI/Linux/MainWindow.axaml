@@ -1,0 +1,188 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GHelper.GUI.Linux.MainWindow"
+        Title="G-Helper"
+        Width="800" Height="600"
+        MinWidth="600" MinHeight="400"
+        WindowStartupLocation="CenterScreen">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#2E3440" Padding="15">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="🎮" FontSize="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <StackPanel>
+                    <TextBlock Text="G-Helper for Linux" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Name="ModelLabel" Text="ASUS Laptop" FontSize="12" Foreground="#88C999"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        
+        <!-- Main Content -->
+        <TabControl Grid.Row="1" Margin="10">
+            
+            <!-- Performance Tab -->
+            <TabItem Header="⚡ Performance">
+                <ScrollViewer>
+                    <StackPanel Spacing="20" Margin="20">
+                        
+                        <!-- Performance Mode -->
+                        <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15">
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="Performance Mode" FontSize="16" FontWeight="Bold"/>
+                                <TextBlock Text="Control CPU and fan performance" FontSize="12" Foreground="#6B7280"/>
+                                <ComboBox Name="PerformanceModeCombo" Width="200" HorizontalAlignment="Left">
+                                    <ComboBoxItem Content="Quiet" Tag="Quiet"/>
+                                    <ComboBoxItem Content="Balanced" Tag="Balanced"/>
+                                    <ComboBoxItem Content="Performance" Tag="Performance"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- GPU Mode -->
+                        <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15">
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="GPU Mode" FontSize="16" FontWeight="Bold"/>
+                                <TextBlock Text="Switch between integrated and discrete GPU" FontSize="12" Foreground="#6B7280"/>
+                                <ComboBox Name="GPUModeCombo" Width="200" HorizontalAlignment="Left">
+                                    <ComboBoxItem Content="Integrated" Tag="Integrated"/>
+                                    <ComboBoxItem Content="Hybrid" Tag="Hybrid"/>
+                                    <ComboBoxItem Content="Vfio" Tag="Vfio"/>
+                                </ComboBox>
+                                <TextBlock Name="GPUModeNote" Text="Note: GPU mode changes require a reboot to take effect" 
+                                          FontSize="11" Foreground="#F59E0B"/>
+                            </StackPanel>
+                        </Border>
+                        
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+            <!-- Battery Tab -->
+            <TabItem Header="🔋 Battery">
+                <ScrollViewer>
+                    <StackPanel Spacing="20" Margin="20">
+                        
+                        <!-- Battery Charge Limit -->
+                        <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15">
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="Battery Charge Limit" FontSize="16" FontWeight="Bold"/>
+                                <TextBlock Text="Limit maximum charge to preserve battery health" FontSize="12" Foreground="#6B7280"/>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Slider Name="BatteryLimitSlider" 
+                                           Minimum="20" Maximum="100" 
+                                           Value="80" 
+                                           Width="300"
+                                           TickFrequency="10"
+                                           IsSnapToTickEnabled="True"/>
+                                    <TextBlock Name="BatteryLimitLabel" Text="80%" 
+                                              FontSize="14" FontWeight="Bold" 
+                                              VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <Button Name="ApplyBatteryLimitButton" 
+                                       Content="Apply Limit" 
+                                       Width="120" 
+                                       HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </Border>
+                        
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+            <!-- Keyboard Tab -->
+            <TabItem Header="⌨️ Keyboard">
+                <ScrollViewer>
+                    <StackPanel Spacing="20" Margin="20">
+                        
+                        <!-- Keyboard Backlight -->
+                        <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15">
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="Keyboard Backlight" FontSize="16" FontWeight="Bold"/>
+                                <TextBlock Text="Adjust keyboard backlight brightness" FontSize="12" Foreground="#6B7280"/>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Slider Name="KeyboardBrightnessSlider" 
+                                           Minimum="0" Maximum="3" 
+                                           Value="1" 
+                                           Width="300"
+                                           TickFrequency="1"
+                                           IsSnapToTickEnabled="True"/>
+                                    <TextBlock Name="KeyboardBrightnessLabel" Text="Level 1" 
+                                              FontSize="14" FontWeight="Bold" 
+                                              VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+            <!-- Status Tab -->
+            <TabItem Header="ℹ️ Status">
+                <ScrollViewer>
+                    <StackPanel Spacing="20" Margin="20">
+                        
+                        <!-- System Information -->
+                        <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15">
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="System Information" FontSize="16" FontWeight="Bold"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Model:" Margin="0,0,10,5" FontWeight="Bold"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Name="StatusModelLabel" Text="Loading..." Margin="0,0,0,5"/>
+                                    
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Performance:" Margin="0,0,10,5" FontWeight="Bold"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Name="StatusPerformanceLabel" Text="Loading..." Margin="0,0,0,5"/>
+                                    
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="GPU Mode:" Margin="0,0,10,5" FontWeight="Bold"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Name="StatusGPULabel" Text="Loading..." Margin="0,0,0,5"/>
+                                    
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Battery Limit:" Margin="0,0,10,5" FontWeight="Bold"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Name="StatusBatteryLabel" Text="Loading..." Margin="0,0,0,5"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- Refresh Button -->
+                        <Button Name="RefreshStatusButton" 
+                               Content="🔄 Refresh Status" 
+                               Width="150" 
+                               HorizontalAlignment="Left"/>
+                        
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+        </TabControl>
+        
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="#F3F4F6" Padding="10">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="G-Helper Linux v0.230" FontSize="12" Foreground="#6B7280" VerticalAlignment="Center"/>
+                <TextBlock Text=" | " FontSize="12" Foreground="#6B7280" VerticalAlignment="Center"/>
+                <TextBlock Text="Using asus-linux tools" FontSize="12" Foreground="#6B7280" VerticalAlignment="Center"/>
+                <Panel Width="20"/>
+                <Button Name="QuitButton" Content="Quit" Width="60" Height="25"/>
+            </StackPanel>
+        </Border>
+        
+    </Grid>
+    
+</Window>

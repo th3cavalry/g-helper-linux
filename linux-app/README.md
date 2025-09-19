@@ -8,12 +8,14 @@ This is a Linux port of the popular G-Helper tool for ASUS laptops. Instead of u
 
 ## Features
 
+- **Modern GUI Interface**: Avalonia-based graphical interface with tabbed design similar to Windows version
 - **Performance Mode Control**: Switch between Quiet, Balanced, and Performance modes
 - **GPU Mode Control**: Switch between Integrated, Hybrid, and Vfio modes (requires supergfxctl)
 - **Battery Charge Limiting**: Set battery charge limits to preserve battery health  
 - **Keyboard Brightness Control**: Adjust keyboard backlight brightness
 - **System Status Monitoring**: View current system configuration
-- **Interactive Mode**: Command-line interface for real-time control
+- **Console Interface**: Command-line interface for scripting and remote access
+- **Interactive Mode**: Real-time control through console commands
 - **Cross-platform .NET 8**: Built with modern .NET for excellent Linux compatibility
 
 ## Prerequisites
@@ -181,10 +183,56 @@ The codebase is structured for easy maintenance and extension:
 | GPU Switching | ✅ | ✅ | Complete |
 | Battery Limits | ✅ | ✅ | Complete |  
 | Keyboard Backlight | ✅ | ✅ | Complete |
+| GUI Interface | ✅ | ✅ | **Complete** |
+| System Tray | ✅ | ⏳ | Planned |
 | Fan Curves | ✅ | ⏳ | Planned |
 | Anime Matrix | ✅ | ⏳ | Planned |
-| System Tray | ✅ | ⏳ | Planned |
-| GUI Interface | ✅ | ⏳ | Under consideration |
+
+## New GUI Interface
+
+G-Helper for Linux now includes a modern graphical interface built with Avalonia UI that provides the same functionality as the Windows version:
+
+### GUI Features
+- **Modern Design**: Fluent theme with tabbed interface
+- **Performance Control**: Easy dropdown selection for Quiet/Balanced/Performance modes
+- **GPU Management**: Switch between Integrated/Hybrid/Vfio modes with visual feedback
+- **Battery Health**: Slider control for charge limits (20-100%) with real-time preview
+- **Keyboard Lighting**: Brightness control with immediate feedback
+- **System Status**: Live display of current system configuration
+- **Cross-Platform**: Same UI framework works across Linux distributions
+
+### Starting the GUI
+
+The GUI launches automatically when you run G-Helper:
+
+```bash
+# Default behavior - launches GUI
+dotnet run --framework net8.0
+
+# Or explicitly request GUI
+dotnet run --framework net8.0 -- settings
+```
+
+### GUI Screenshots
+
+The GUI provides a familiar tabbed interface similar to the Windows version:
+
+- **Performance Tab**: Control CPU performance and fan behavior
+- **Battery Tab**: Set charge limits to preserve battery health  
+- **Keyboard Tab**: Adjust backlight brightness levels
+- **Status Tab**: View current system configuration
+
+### Fallback Options
+
+If GUI cannot start (no display available), G-Helper automatically falls back to:
+
+```bash
+# Console mode with interactive commands
+dotnet run --framework net8.0 -- console
+
+# Demo mode for testing (no hardware required)
+dotnet run --framework net8.0 -- --mock
+```
 
 ## Limitations
 

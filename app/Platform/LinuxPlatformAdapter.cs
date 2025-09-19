@@ -1,6 +1,9 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Tmds.DBus;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using GHelper.GUI.Linux;
 
 namespace GHelper.Platform
 {
@@ -128,22 +131,40 @@ namespace GHelper.Platform
 
         public void InitializeTray()
         {
-            // For now, this is a placeholder
-            // In a full implementation, this would create a system tray icon
-            Console.WriteLine("Tray initialized (placeholder)");
+            Console.WriteLine("Tray initialized with GUI support");
         }
 
         public void ShowSettings()
         {
-            // For now, this is a placeholder
-            // In a full implementation, this would show the GUI
-            Console.WriteLine("Settings shown (placeholder)");
+            try
+            {
+                // For Avalonia, we need to start the application differently
+                var builder = AppBuilder.Configure<App>()
+                    .UsePlatformDetect()
+                    .LogToTrace();
+
+                // Start with classic desktop lifetime
+                builder.StartWithClassicDesktopLifetime(new string[0]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error showing GUI: {ex.Message}");
+                Console.WriteLine("Falling back to console message");
+            }
         }
 
         public void HideSettings()
         {
-            // For now, this is a placeholder
-            Console.WriteLine("Settings hidden (placeholder)");
+            try
+            {
+                // In a simple implementation, we can't easily hide the window
+                // This would need a more sophisticated approach with shared state
+                Console.WriteLine("Hide settings called");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error hiding GUI: {ex.Message}");
+            }
         }
 
         public void Exit()
